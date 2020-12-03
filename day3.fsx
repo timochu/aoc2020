@@ -6,7 +6,7 @@ let everyNth n items =
         |> Seq.filter (fun (_, i) -> i % n = n-1)
         |> Seq.map fst
 
-let trees x y = input |> everyNth ((width * y) + x) |> Seq.filter ((=) '#') |> Seq.length
+let trees x y = input |> everyNth (width * y + x) |> Seq.filter ((=) '#') |> Seq.length
 
 printfn "%i" (trees 3 1)
 printfn "%i" (trees 1 1 * trees 3 1 * trees 5 1 * trees 7 1 * trees 1 2)
