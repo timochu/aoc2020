@@ -18,7 +18,7 @@ let isValid password =
 let isValid2 password = 
     (password.Pass.[password.Min-1] = password.Character) <> (password.Pass.[password.Max-1] = password.Character)
 
-let passwords = System.IO.File.ReadAllLines "day2.txt" |> Seq.map toPassword
+let passwords = System.IO.File.ReadAllLines "inputs/day2.txt" |> Seq.map toPassword
 
 printfn "%i" (passwords |> Seq.where isValid |> Seq.length)
 printfn "%i" (passwords |> Seq.where isValid2 |> Seq.length)

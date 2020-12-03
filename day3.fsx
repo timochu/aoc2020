@@ -1,5 +1,5 @@
-let input = System.IO.File.ReadAllLines "day3.txt" |> Seq.map (String.replicate 100) |> String.concat ""
-let width = System.IO.File.ReadLines "day3.txt" |> Seq.head |> String.replicate 100 |> String.length
+let input = System.IO.File.ReadAllLines "inputs/day3.txt" |> Seq.map (String.replicate 100) |> String.concat ""
+let width = System.IO.File.ReadLines "inputs/day3.txt" |> Seq.head |> String.replicate 100 |> String.length
 
 let everyNth n seq = 
   seq |> Seq.mapi (fun i el -> el, i-1)
