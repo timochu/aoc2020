@@ -33,7 +33,7 @@ let isValid2 p =
     let hasValidEyr p = p.Eyr |> Option.exists (between 2020 2030)
     let hasValidHgt p = 
         match p.Hgt with
-        | Some (value, unit) when unit = "cm" -> between 150 193 value // 150 <= value && value <= 193
+        | Some (value, unit) when unit = "cm" -> between 150 193 value
         | Some (value, unit) when unit = "in" -> between 59 76 value
         | _ -> false
     let hasValidHcl p = 
@@ -43,7 +43,6 @@ let isValid2 p =
     let hasValidPid p = 
         p.Pid |> Option.exists (fun x -> x |> Seq.where Char.IsNumber |> Seq.length |> (=) 9)
     hasValidByr p && hasValidIyr p && hasValidEyr p && hasValidHgt p && hasValidHcl p && hasValidEcl p && hasValidPid p
-    // [hasValidByr; hasValidIyr; hasValidEyr; hasValidHgt; hasValidHcl; hasValidEcl; hasValidPid] |> List.forall (fun x -> x p)
 
 let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split("\n\n")) |> Seq.map toPassport
 
