@@ -12,12 +12,12 @@ type Passport =
 
 let toPassport (s : string) =
     let parts = s.Split(' ', ':', '\n')
-    let getEntry s = parts |> Array.tryFindIndex ((=) s) |> Option.bind ((+) 1 >> Array.get parts >> Some)
-    let toHeight s = (s |> Seq.where Char.IsNumber |> String.Concat |> int, s |> Seq.where Char.IsLetter |> String.Concat) |> Some
-    { Byr = getEntry "byr" |> Option.bind (int >> Some)
-      Iyr = getEntry "iyr" |> Option.bind (int >> Some)
-      Eyr = getEntry "eyr" |> Option.bind (int >> Some)
-      Hgt = getEntry "hgt" |> Option.bind toHeight
+    let getEntry s = parts |> Array.tryFindIndex ((=) s) |> Option.map ((+) 1 >> Array.get parts)
+    let toHeight s = (s |> Seq.where Char.IsNumber |> String.Concat |> int, s |> Seq.where Char.IsLetter |> String.Concat)
+    { Byr = getEntry "byr" |> Option.map int
+      Iyr = getEntry "iyr" |> Option.map int
+      Eyr = getEntry "eyr" |> Option.map int
+      Hgt = getEntry "hgt" |> Option.map toHeight
       Hcl = getEntry "hcl"
       Ecl = getEntry "ecl"
       Pid = getEntry "pid"
