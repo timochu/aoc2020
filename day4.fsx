@@ -11,7 +11,7 @@ type Passport =
       Cid: string option }
 
 let toPassport (s : string) =
-    let parts = s.Split(' ', ':', '\n')
+    let parts = s.Split([|" "; ":"; Environment.NewLine|], StringSplitOptions.RemoveEmptyEntries)
     let getEntry s = parts |> Array.tryFindIndex ((=) s) |> Option.map ((+) 1 >> Array.get parts)
     let toHeight s = (s |> Seq.where Char.IsNumber |> String.Concat |> int, s |> Seq.where Char.IsLetter |> String.Concat)
     { Byr = getEntry "byr" |> Option.map int
@@ -41,7 +41,7 @@ let isValid2 p =
     let hasValidPid p = p.Pid |> Option.exists (fun x -> x |> Seq.where Char.IsNumber |> Seq.length |> (=) 9)
     hasValidByr p && hasValidIyr p && hasValidEyr p && hasValidHgt p && hasValidHcl p && hasValidEcl p && hasValidPid p
 
-let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split("\n\n")) |> Seq.map toPassport
+let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split(Environment.NewLine |> String.replicate 2)) |> Seq.map toPassport
 
 printfn "%i" (input |> Seq.where isValid |> Seq.length)
 printfn "%i" (input |> Seq.where isValid2 |> Seq.length)
