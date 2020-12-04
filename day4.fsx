@@ -41,7 +41,7 @@ let isValid2 p =
     let hasValidPid p = p.Pid |> Option.exists (fun x -> x |> Seq.where Char.IsNumber |> Seq.length |> (=) 9)
     hasValidByr p && hasValidIyr p && hasValidEyr p && hasValidHgt p && hasValidHcl p && hasValidEcl p && hasValidPid p
 
-let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split(Environment.NewLine |> String.replicate 2)) |> Seq.map toPassport
+let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split(Environment.NewLine |> String.replicate 2)) |> Array.map toPassport
 
 printfn "%i" (input |> Seq.where isValid |> Seq.length)
 printfn "%i" (input |> Seq.where isValid2 |> Seq.length)
