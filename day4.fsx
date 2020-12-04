@@ -36,12 +36,9 @@ let isValid2 p =
         | Some (value, unit) when unit = "cm" -> between 150 193 value
         | Some (value, unit) when unit = "in" -> between 59 76 value
         | _ -> false
-    let hasValidHcl p = 
-        p.Hcl |> Option.exists (fun x -> x.[0] = '#' && x |> Seq.where Char.IsLetterOrDigit |> Seq.length |> (=) 6)
-    let hasValidEcl p = 
-        p.Ecl |> Option.exists (fun x -> ["amb"; "blu"; "brn"; "gry"; "grn"; "hzl"; "oth"] |> List.contains x)
-    let hasValidPid p = 
-        p.Pid |> Option.exists (fun x -> x |> Seq.where Char.IsNumber |> Seq.length |> (=) 9)
+    let hasValidHcl p = p.Hcl |> Option.exists (fun x -> x.[0] = '#' && x |> Seq.where Char.IsLetterOrDigit |> Seq.length |> (=) 6)
+    let hasValidEcl p = p.Ecl |> Option.exists (fun x -> ["amb"; "blu"; "brn"; "gry"; "grn"; "hzl"; "oth"] |> List.contains x)
+    let hasValidPid p = p.Pid |> Option.exists (fun x -> x |> Seq.where Char.IsNumber |> Seq.length |> (=) 9)
     hasValidByr p && hasValidIyr p && hasValidEyr p && hasValidHgt p && hasValidHcl p && hasValidEcl p && hasValidPid p
 
 let input = IO.File.ReadAllText "inputs/day4.txt" |> (fun x -> x.Split("\n\n")) |> Seq.map toPassport
