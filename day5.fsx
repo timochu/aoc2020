@@ -1,5 +1,7 @@
 let search (s : string) c = 
-    s |> Seq.fold (fun (lo, hi, _) x -> if x=c then (lo, hi-(hi+1-lo)/2, lo) else (lo+(hi+1-lo)/2, hi, hi)) (0, (pown 2 s.Length)-1, 0) |> fun (_,_,a) -> a
+    s 
+    |> Seq.fold (fun (lo, hi, _) x -> if x=c then (lo, hi-(hi+1-lo)/2, lo) else (lo+(hi+1-lo)/2, hi, hi)) (0, (pown 2 s.Length)-1, 0) 
+    |> fun (_,_,a) -> a
 
 let toId (s : string) =
     let row = search s.[..6] 'F'
