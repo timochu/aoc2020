@@ -1,5 +1,4 @@
-open type System.Environment
-
-let groups = (System.IO.File.ReadAllText "inputs/day6.txt").Split(NewLine + NewLine)
-groups |> Array.sumBy (Seq.distinct >> Seq.where System.Char.IsLetter >> Seq.length)  |> printfn "%i"
-groups |> Array.sumBy (fun x -> x.Split NewLine |> Seq.map Set.ofSeq |> Set.intersectMany |> Set.count) |> printfn "%i"
+open System
+let groups = IO.File.ReadAllText("inputs/day6.txt").Split(Environment.NewLine + Environment.NewLine)
+groups |> Array.sumBy (Seq.distinct >> Seq.where Char.IsLetter >> Seq.length)  |> printfn "%i"
+groups |> Array.sumBy (fun x -> x.Split Environment.NewLine |> Seq.map Set.ofSeq |> Set.intersectMany |> Set.count) |> printfn "%i"
