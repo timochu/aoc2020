@@ -1,18 +1,23 @@
 let input = System.IO.File.ReadAllLines("inputs/day7.txt") |> Array.toList
-let separators = [| " contain "; " bags"; " bag"; "."; ", "; "no other" |]
-let flattenRules (rules : list<string list>) =
-    rules |> List.map (fun x -> x.[1..] |> List.collect (fun y -> List.replicate (y.[0] |> System.Char.GetNumericValue |> int) (y.[2..])) |> (fun z -> [x.[0]] @ z))
-let rules =  input |> List.map (fun x -> x.Split(separators, System.StringSplitOptions.RemoveEmptyEntries) |> Array.toList) |> flattenRules
 
-let rec bagsFor rules bag =
-    let initial = rules |> List.where (fun (x : string list) -> x.[1..] |> Seq.exists ((=) bag)) |> List.map Seq.head
-    let recursive = initial |> List.collect (bagsFor rules)
-    initial @ recursive |> List.distinct
+let splitRules (str : string) = 
+    str.Split ([|" contain "; " bags"; " bag"; "."; ", "; "no other"|], System.StringSplitOptions.RemoveEmptyEntries)
+    |> Array.toList
 
-let rec bagsIn (rules : list<string list>) (bag : string) =
-    let initial = rules |> List.find (fun x -> x.[0] = bag) |> fun x -> x.[1..]
-    let recursive = initial |> List.collect (bagsIn rules)
-    initial @ recursive
+let flattenRule (rule : string list) =
+    rule.[1..] 
+    |> List.collect (fun color -> List.replicate (color.[0] |> System.Char.GetNumericValue |> int) (color.[2..])) 
+    |> fun colors -> rule.[0] :: colors
 
-"shiny gold" |> bagsFor rules |> List.length |> printfn "%i"
-"shiny gold" |> bagsIn rules |> List.length |> printfn "%i"
+let rules = input |> List.map (splitRules >> flattenRule)
+
+let rec bagsFor color =
+    let result = rules |> List.where (fun rule -> rule.[1..] |> List.exists ((=) color)) |> List.map List.head
+    result @ (result |> List.collect bagsFor) |> List.distinct
+
+let rec bagsIn color =
+    let initial = rules |> List.find (fun rule -> rule.[0] = color) |> fun x -> x.[1..]
+    initial @ (initial |> List.collect bagsIn)
+
+"shiny gold" |> bagsFor |> List.length |> printfn "%i"
+"shiny gold" |> bagsIn |> List.length |> printfn "%i"
