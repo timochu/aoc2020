@@ -15,8 +15,8 @@ let rec bagsFor color =
     result @ (result |> List.collect bagsFor) |> List.distinct
 
 let rec bagsIn color =
-    let initial = rules |> List.find (fun rule -> rule.[0] = color) |> fun x -> x.[1..]
-    initial @ (initial |> List.collect bagsIn)
+    let result = rules |> List.find (fun rule -> rule.[0] = color) |> fun x -> x.[1..]
+    result @ (result |> List.collect bagsIn)
 
 "shiny gold" |> bagsFor |> List.length |> printfn "%i"
 "shiny gold" |> bagsIn |> List.length |> printfn "%i"
