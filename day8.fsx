@@ -15,23 +15,23 @@ let toCommand (s : string) =
 
 let commands = input |> Array.map toCommand |> Array.indexed
 
-let mutable accumulator = 0
-let mutable index = 0
-let mutable log = []
-
-let processCommand (i, c) =
-    log <- log @ [i]
-    printfn "accu %i" accumulator
-    match c with
-    | Acc x -> 
-        accumulator <- accumulator + x
-        index <- index + 1
-    | Jmp x -> index <- index + x
-    | Nop _ -> index <- index + 1
-
 let run (cmds : (int * Command) []) =
+    let mutable accumulator = 0
+    let mutable index = 0
+    let mutable log = []
+
+    let processCommand (i, c) =
+        log <- log @ [i]
+        match c with
+        | Acc x -> 
+            accumulator <- accumulator + x
+            index <- index + 1
+        | Jmp x -> index <- index + x
+        | Nop _ -> index <- index + 1
+        
     while (log |> List.exists ((=) index) |> not) do
         processCommand cmds.[index]
+
     printfn "final %i" accumulator
 
 run commands
