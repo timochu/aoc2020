@@ -16,7 +16,6 @@ let run subIndex (cmds : (int * Command) []) =
     let mutable log = []
     let mutable accumulator = 0
     let mutable iterator = 0
-    let mutable jmpNopCounter = -1
 
     let processCommand (commandIndex, command) =
         log <- log @ [commandIndex]
@@ -25,12 +24,10 @@ let run subIndex (cmds : (int * Command) []) =
             accumulator <- accumulator + x
             iterator <- iterator + 1
         | Jmp x -> 
-            jmpNopCounter <- jmpNopCounter + 1
-            if jmpNopCounter = subIndex then iterator <- iterator + 1
+            if commandIndex = subIndex then iterator <- iterator + 1
             else iterator <- iterator + x
         | Nop x -> 
-            jmpNopCounter <- jmpNopCounter + 1
-            if jmpNopCounter = subIndex then iterator <- iterator + x
+            if commandIndex = subIndex then iterator <- iterator + x
             else iterator <- iterator + 1
     
     let isFailure () = log |> List.exists ((=) iterator)
