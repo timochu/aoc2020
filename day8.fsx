@@ -42,5 +42,5 @@ let run subIndex (cmds : (int * Command) []) =
     (isFinalInstruction(), accumulator)
 
 commands |> run 0 |> snd |> printfn "%i"
-[0 .. commands.Length] |> List.map (fun x -> commands |> run x) |> List.where fst |> List.exactlyOne |> snd |> printfn "%i"
+[0 .. commands.Length] |> Seq.map (fun x -> commands |> run x) |> Seq.pick (fun (b, r) -> if b then Some r else None ) |> printfn "%i"
         
