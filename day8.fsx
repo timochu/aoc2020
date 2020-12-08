@@ -27,9 +27,9 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
             | Nop x -> 
                 if index = substitutionIndex then (accumulator, iterator + x, log, isInfiniteLoop)
                 else (accumulator, iterator + 1, log, isInfiniteLoop)
-
+    
     instructions 
-        |> Seq.fold (fun state (x, y) -> processInstruction x state) (0, 0, Array.zeroCreate (instructions.Length + 1), false) 
+        |> Seq.fold (fun state (index, _) -> processInstruction index state) (0, 0, Array.zeroCreate (instructions.Length + 1), false) 
         |> fun (a,_,_,b) -> (a, b)
 
 instructions |> run -1 |> fst |> printfn "%i"
