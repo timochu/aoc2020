@@ -13,32 +13,26 @@ let toInstruction (s : string) =
 let instructions = input |> Array.map toInstruction |> Array.indexed
 
 let run substitutionIndex (instructions : (int * Instruction) []) =
-    let log = Array.zeroCreate (instructions.Length + 1)
-    let mutable accumulator = 0
-    let mutable iterator = 0
-    
-    let processInstruction (index, instruction) =
-        Array.set log index (Some instruction)
-        match instruction with
-        | Acc x -> 
-            accumulator <- accumulator + x
-            iterator <- iterator + 1
-        | Jmp x -> 
-            if index = substitutionIndex then iterator <- iterator + 1
-            else iterator <- iterator + x
-        | Nop x -> 
-            if index = substitutionIndex then iterator <- iterator + x
-            else iterator <- iterator + 1
+    let processInstruction (index, instruction) (accumulator, iterator, (log : option<Instruction> array), isLooping) =
+        let isFinalInstruction = iterator = instructions.Length
+        let isInfiniteLoop = log.[iterator] |> Option.isSome
+        if isInfiniteLoop || isFinalInstruction then (accumulator, iterator, log, isInfiniteLoop)
+        else
+            Array.set log iterator (Some (snd instructions.[iterator]))
+            match snd instructions.[iterator] with
+            | Acc x -> (accumulator + x, iterator + 1, log, isInfiniteLoop)
+            | Jmp x -> 
+                if index = substitutionIndex then (accumulator, iterator + 1, log, isInfiniteLoop)
+                else (accumulator, iterator + x, log, isInfiniteLoop)
+            | Nop x -> 
+                if index = substitutionIndex then (accumulator, iterator + x, log, isInfiniteLoop)
+                else (accumulator, iterator + 1, log, isInfiniteLoop)
 
-    let isInfiniteLoop () = log.[iterator] |> Option.isSome
-    let isFinalInstruction () = iterator = instructions.Length
+    instructions 
+        |> Seq.fold (fun state x -> processInstruction x state) (0, 0, Array.zeroCreate (instructions.Length + 1), false) 
+        |> fun (a,_,_,b) -> (a, b)
 
-    while not (isInfiniteLoop() || isFinalInstruction()) do
-        processInstruction instructions.[iterator]
-
-    (accumulator, isFinalInstruction())
-
-instructions |> run 0 |> fst |> printfn "%i"
+instructions |> run -1 |> fst |> printfn "%i"
 instructions |> Seq.mapi (fun i _ -> instructions |> run i) 
-             |> Seq.pick (fun (result, success) -> if success then Some result else None ) 
+             |> Seq.pick (fun (result, looping) -> if not looping then Some result else None ) 
              |> printfn "%i"
