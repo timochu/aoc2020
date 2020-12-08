@@ -13,7 +13,7 @@ let toInstruction (s : string) =
 let instructions = input |> Array.map toInstruction |> Array.indexed
 
 let run substitutionIndex (instructions : (int * Instruction) []) =
-    let processInstruction (index, instruction) (accumulator, iterator, (log : option<Instruction> array), isLooping) =
+    let processInstruction index (accumulator, iterator, (log : option<Instruction> array), _) =
         let isFinalInstruction = iterator = instructions.Length
         let isInfiniteLoop = log.[iterator] |> Option.isSome
         if isInfiniteLoop || isFinalInstruction then (accumulator, iterator, log, isInfiniteLoop)
@@ -29,7 +29,7 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
                 else (accumulator, iterator + 1, log, isInfiniteLoop)
 
     instructions 
-        |> Seq.fold (fun state x -> processInstruction x state) (0, 0, Array.zeroCreate (instructions.Length + 1), false) 
+        |> Seq.fold (fun state (x, y) -> processInstruction x state) (0, 0, Array.zeroCreate (instructions.Length + 1), false) 
         |> fun (a,_,_,b) -> (a, b)
 
 instructions |> run -1 |> fst |> printfn "%i"
