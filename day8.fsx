@@ -17,7 +17,7 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
     let mutable accumulator = 0
     let mutable iterator = 0
 
-    let processCommand (index, instruction) =
+    let processInstruction (index, instruction) =
         Array.set log index (Some instruction)
         match instruction with
         | Acc x -> 
@@ -34,7 +34,7 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
     let isFinalInstruction () = iterator = instructions.Length-1
 
     while not (isFailure () || isFinalInstruction ()) do
-        processCommand instructions.[iterator]
+        processInstruction instructions.[iterator]
 
     (isFinalInstruction(), accumulator)
 
