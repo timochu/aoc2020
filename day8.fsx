@@ -12,23 +12,35 @@ let toCommand (s : string) =
 
 let commands = input |> Array.map toCommand |> Array.indexed
 
-let run (cmds : (int * Command) []) =
+let run subIndex (cmds : (int * Command) []) =
+    let mutable log = []
     let mutable accumulator = 0
     let mutable iterator = 0
-    let mutable log = []
+    let mutable jmpNopCounter = -1
 
-    let processCommand (i, c) =
-        log <- log @ [i]
-        match c with
+    let processCommand (commandIndex, command) =
+        log <- log @ [commandIndex]
+        match command with
         | Acc x -> 
             accumulator <- accumulator + x
             iterator <- iterator + 1
-        | Jmp x -> iterator <- iterator + x
-        | Nop _ -> iterator <- iterator + 1
-        
-    while (log |> List.exists ((=) iterator) |> not) do
+        | Jmp x -> 
+            jmpNopCounter <- jmpNopCounter + 1
+            if jmpNopCounter = subIndex then iterator <- iterator + 1
+            else iterator <- iterator + x
+        | Nop x -> 
+            jmpNopCounter <- jmpNopCounter + 1
+            if jmpNopCounter = subIndex then iterator <- iterator + x
+            else iterator <- iterator + 1
+    
+    let isFailure () = log |> List.exists ((=) iterator)
+    let isFinalInstruction () = log |> List.exists ((=) (cmds |> Array.last |> fst))
+
+    while not (isFailure () || isFinalInstruction ()) do
         processCommand cmds.[iterator]
 
-    accumulator
+    (isFinalInstruction(), accumulator)
 
-run commands |> printfn "%i"
+commands |> run 0 |> snd |> printfn "%i"
+[0 .. commands.Length] |> List.map (fun x -> commands |> run x) |> List.where fst |> List.exactlyOne |> snd |> printfn "%i"
+        
