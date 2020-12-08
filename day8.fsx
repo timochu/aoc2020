@@ -13,10 +13,10 @@ let toInstruction (s : string) =
 let instructions = input |> Array.map toInstruction |> Array.indexed
 
 let run substitutionIndex (instructions : (int * Instruction) []) =
-    let log = Array.zeroCreate instructions.Length
+    let log = Array.zeroCreate (instructions.Length + 1)
     let mutable accumulator = 0
     let mutable iterator = 0
-
+    
     let processInstruction (index, instruction) =
         Array.set log index (Some instruction)
         match instruction with
@@ -29,16 +29,16 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
         | Nop x -> 
             if index = substitutionIndex then iterator <- iterator + x
             else iterator <- iterator + 1
-    
-    let isFailure () = log.[iterator] |> Option.isSome
-    let isFinalInstruction () = iterator = instructions.Length-1
 
-    while not (isFailure () || isFinalInstruction ()) do
+    let isInfiniteLoop () = log.[iterator] |> Option.isSome
+    let isFinalInstruction () = iterator = instructions.Length
+
+    while not (isInfiniteLoop() || isFinalInstruction()) do
         processInstruction instructions.[iterator]
 
-    (isFinalInstruction(), accumulator)
+    (accumulator, isFinalInstruction())
 
-instructions |> run 0 |> snd |> printfn "%i"
+instructions |> run 0 |> fst |> printfn "%i"
 instructions |> Seq.mapi (fun i _ -> instructions |> run i) 
-             |> Seq.pick (fun (success, result) -> if success then Some result else None ) 
+             |> Seq.pick (fun (result, success) -> if success then Some result else None ) 
              |> printfn "%i"
