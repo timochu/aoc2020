@@ -39,5 +39,6 @@ let run substitutionIndex (instructions : (int * Instruction) []) =
     (isFinalInstruction(), accumulator)
 
 instructions |> run 0 |> snd |> printfn "%i"
-[0 .. instructions.Length] |> Seq.map (fun x -> instructions |> run x) |> Seq.pick (fun (b, r) -> if b then Some r else None ) |> printfn "%i"
-        
+instructions |> Seq.mapi (fun i _ -> instructions |> run i) 
+             |> Seq.pick (fun (success, result) -> if success then Some result else None ) 
+             |> printfn "%i"
