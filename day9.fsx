@@ -13,7 +13,7 @@ let answer =
 
 let permutations startIndex = 
     let indexOfAnswer = input |> Seq.findIndex ((=) answer)
-    Seq.scanBack (fun x a -> a @ [x]) input.[startIndex..indexOfAnswer] []
+    input.[startIndex..indexOfAnswer] |> Seq.scan (fun a x -> a @ [x]) []
 
 printfn "%i" answer
 
