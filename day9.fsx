@@ -1,9 +1,10 @@
+#time
 let input = System.IO.File.ReadAllLines("inputs/day9.txt") |> Array.map int64
 let preample = 25
 
 let isValid index =
     let previous = input.[index-preample .. index-1]
-    (previous, previous) ||> Array.allPairs |> Array.map (fun (x,y) -> x+y) |> Array.exists ((=) input.[index])
+    (previous, previous) ||> Seq.allPairs |> Seq.map (fun (x,y) -> x+y) |> Seq.exists ((=) input.[index])
 
 let answer = 
     input.[preample..] 
