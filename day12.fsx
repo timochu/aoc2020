@@ -48,3 +48,29 @@ actions
     ) (0, 0, 90)
     |> fun (x,y,_) -> (abs x) + (abs y)
     |> printfn "%A"
+
+let rot90 (x, y, x2, y2) = (y,-x,x2,y2)
+
+actions 
+|> Array.fold (fun (x,y,x2,y2) action -> 
+    match action with
+    | North v -> (x,y+v,x2,y2)
+    | South v -> (x,y-v,x2,y2)
+    | East v -> (x+v,y,x2,y2)
+    | West v -> (x-v,y,x2,y2)
+    | Left v ->
+        match v with
+        | 90 -> (x,y,x2,y2) |> rot90 |> rot90 |> rot90
+        | 180 -> (x,y,x2,y2) |> rot90 |> rot90
+        | 270 -> (x,y,x2,y2) |> rot90
+        | _ -> failwith "Unrecognized direction"
+    | Right v ->
+        match v with
+        | 90 -> (x,y,x2,y2) |> rot90 
+        | 180 -> (x,y,x2,y2) |> rot90 |> rot90
+        | 270 -> (x,y,x2,y2) |> rot90 |> rot90 |> rot90
+        | _ -> failwith "Unrecognized direction"
+    | Forward v -> (x,y,x2+(x*v),y2+(y*v))
+    ) (10, 1, 0, 0)
+    |> fun (_,_,x,y) -> (abs x) + (abs y)
+    |> printfn "%A"
