@@ -21,11 +21,13 @@ let toAction (s : string) =
     | x -> failwithf "Unrecognized action: %A" x
 
 let actions = input |> Array.map toAction
-let add a b =
-    let result = a+b
-    if result > 360 then result - 360
-    else if result < 0 then result + 360
-    else result
+let manhattanDistance (x,y,_) = (abs x) + (abs y)
+
+let wrap x =
+    match x with
+    | x when x > 360 -> x - 360
+    | x when x < 0 -> x + 360
+    | _ -> x
 
 let position =
     actions 
@@ -36,8 +38,8 @@ let position =
         | South v -> (x,y-v,d)
         | East v -> (x+v,y,d)
         | West v -> (x-v,y,d)
-        | Left v -> (x,y, add d -v)
-        | Right v -> (x,y, add d +v)
+        | Left v -> (x,y, d-v |> wrap)
+        | Right v -> (x,y, d+v |> wrap)
         | Forward v ->
             match d with
             | 0 -> (x,y+v,d)
@@ -45,9 +47,9 @@ let position =
             | 180 -> (x,y-v,d)
             | 270 -> (x-v,y,d)
             | 360 -> (x,y+v,d)
+            | _ -> failwith "Unrecognized destination"
         ) (0, 0, 90)
 
-let manhattanDistance (x,y,_) = (abs x) + (abs y)
 
 actions |> Array.iter (printfn "%A")
 printfn "%A" (manhattanDistance position)
