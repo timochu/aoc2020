@@ -22,12 +22,11 @@ let toAction (s : string) =
 
 let actions = input |> Array.map toAction
 let manhattanDistance (x,y,_) = (abs x) + (abs y)
-
-let wrap x =
-    match x with
+let wrap =
+    function
     | x when x > 360 -> x - 360
     | x when x < 0 -> x + 360
-    | _ -> x
+    | x -> x
 
 let position =
     actions 
