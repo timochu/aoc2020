@@ -46,7 +46,7 @@ let position =
             | 180 -> (x,y-v,d)
             | 270 -> (x-v,y,d)
             | 360 -> (x,y+v,d)
-            | _ -> failwith "Unrecognized destination"
+            | _ -> failwith "Unrecognized direction"
         ) (0, 0, 90)
 
 
