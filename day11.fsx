@@ -12,21 +12,15 @@ let neighbors r c a =
      if r < l1 && c < l2 then yield a.[r+1,c+1]
      if r < l1 && c > 0 then yield a.[r+1,c-1]]
 
-let isAvailable r c (a : char[,]) = 
-    let s = a.[r,c]
-    if s = 'L' then a |> neighbors r c |> Seq.where ((=) '#') |> Seq.isEmpty
-    else a |> neighbors r c |> Seq.where ((=) '#') |> Seq.length < 4
-
 let seat r c (a : char[,]) =
-    let s = a.[r,c]
-    if s = '.' then '.' else if isAvailable r c a then '#' else 'L'
+    match a.[r,c], a with
+    | '.', _ -> '.'
+    | 'L', a when a |> neighbors r c |> Seq.where ((=) '#') |> Seq.isEmpty -> '#'
+    | '#', a when a |> neighbors r c |> Seq.where ((=) '#') |> Seq.length > 3 -> 'L'
+    | x, _ -> x
 
 let doSeats a = a |> Array2D.mapi (fun r c _ -> seat r c a)
-
 let occupiedSeats a = a |> Seq.cast |> Seq.where ((=) '#') |> Seq.length
+let finalSeating = [0 .. 200] |> Seq.fold (fun state _ -> state |> doSeats) input
 
-let finalSeating =
-    [0 .. 140]
-    |> Seq.fold (fun state _ -> state |> doSeats) input
-
-printfn "%A" (occupiedSeats finalSeating)
+printfn "%A" (finalSeating |> occupiedSeats)
