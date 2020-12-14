@@ -21,6 +21,10 @@ let seat r c (a : char[,]) =
 
 let doSeats a = a |> Array2D.mapi (fun r c _ -> seat r c a)
 let occupiedSeats a = a |> Seq.cast |> Seq.where ((=) '#') |> Seq.length
-let finalSeating = [0 .. 200] |> Seq.fold (fun state _ -> state |> doSeats) input
 
-printfn "%A" (finalSeating |> occupiedSeats)
+let rec finalSeatingCount seats occ =
+    let result = seats |> doSeats
+    let occupied = result |> occupiedSeats
+    if occ = occupied then occupied else finalSeatingCount result occupied
+
+printfn "%A" (finalSeatingCount input 0)
