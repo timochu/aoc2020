@@ -28,27 +28,23 @@ let wrap =
     | x when x < 0 -> x + 360
     | x -> x
 
-let position =
-    actions 
-    |> Array.fold (fun (x,y,d) action -> 
-        printfn "%i %i %i" x y d
-        match action with
-        | North v -> (x,y+v,d)
-        | South v -> (x,y-v,d)
-        | East v -> (x+v,y,d)
-        | West v -> (x-v,y,d)
-        | Left v -> (x,y, d-v |> wrap)
-        | Right v -> (x,y, d+v |> wrap)
-        | Forward v ->
-            match d with
-            | 0 -> (x,y+v,d)
-            | 90 -> (x+v,y,d)
-            | 180 -> (x,y-v,d)
-            | 270 -> (x-v,y,d)
-            | 360 -> (x,y+v,d)
-            | _ -> failwith "Unrecognized direction"
-        ) (0, 0, 90)
-
-
-actions |> Array.iter (printfn "%A")
-printfn "%A" (manhattanDistance position)
+actions 
+|> Array.fold (fun (x,y,d) action -> 
+    match action with
+    | North v -> (x,y+v,d)
+    | South v -> (x,y-v,d)
+    | East v -> (x+v,y,d)
+    | West v -> (x-v,y,d)
+    | Left v -> (x,y, d-v |> wrap)
+    | Right v -> (x,y, d+v |> wrap)
+    | Forward v ->
+        match d with
+        | 0 -> (x,y+v,d)
+        | 90 -> (x+v,y,d)
+        | 180 -> (x,y-v,d)
+        | 270 -> (x-v,y,d)
+        | 360 -> (x,y+v,d)
+        | _ -> failwith "Unrecognized direction"
+    ) (0, 0, 90)
+    |> fun (x,y,_) -> (abs x) + (abs y)
+    |> printfn "%A"
