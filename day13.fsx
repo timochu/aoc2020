@@ -1,3 +1,4 @@
+#time
 let input =  System.IO.File.ReadAllLines("inputs/day13.txt")
 let timestamp = input.[0] |> int64
 let buses = input.[1].Split ',' |> Seq.indexed |> Seq.where (fun (_, x) -> x <> "x") |> Seq.map (fun (i,x) -> (int64 i, int64 x)) |> Seq.toArray
@@ -12,11 +13,15 @@ let bus = waitTimes |> Seq.findIndex ((=) shortestWait) |> fun x -> buses.[x] |>
 
 printfn "%i" (bus * (abs shortestWait))
 
-let mutable t = 0L
-let mutable found = false
-let checker (i, bus) = ((t+i) % bus) = 0L
-while not found do
-    t <- t+1L
-    found <- buses |> Seq.forall checker
+let firstBusId = buses |> Array.head |> snd
+let busTotal = buses.Length - 1
+let lcm a = a |> Seq.fold (*) 1L // only works for prime numbers
 
-printfn "%i" t
+let rec findTime busCount inc t =
+    let result = buses.[..busCount] |> Seq.forall (fun (i, bus) -> (t+i) % bus = 0L)
+    match result, busCount = busTotal with
+    | false, _ -> findTime busCount inc (t+inc)
+    | true, false -> findTime (busCount+1) ((buses.[..busCount] |> Seq.map snd |> lcm)) t
+    | true, true -> t
+
+printfn "%i" (findTime 0 firstBusId 0L)
