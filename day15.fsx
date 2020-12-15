@@ -1,15 +1,23 @@
-let input =  System.IO.File.ReadAllText("inputs/day15.txt").Split ',' |> Seq.map int |> Seq.toList
+#time
+let input = System.IO.File.ReadAllText("inputs/day15.txt").Split ',' |> Seq.map int |> Seq.rev
+let initialLength = input |> Seq.length
 
-let nextValue (a: list<'a>) =
-    let prevInt = a |> Seq.last
-    match a.[..a.Length-2] |> Seq.contains prevInt with
+let nextValue a =
+    let prevInt = a |> Seq.head
+    match a |> Seq.skip 1 |> Seq.exists ((=) prevInt) with
     | false -> 0
-    | true ->
-        let prevIndex = a |> Seq.findIndexBack ((=) prevInt)
-        let prevIndex2 = a.[..a.Length-2] |> Seq.findIndexBack ((=) prevInt)
-        prevIndex-prevIndex2
+    | true -> a |> Seq.skip 1 |> Seq.findIndex ((=) prevInt) |> (+) 1
 
-let calc iterations =
-    [0 .. iterations-input.Length-1] |> Seq.fold (fun state _ -> state @ [nextValue state]) input
+let rec calc iterations a =
+    let next = nextValue a
+    match iterations with
+    | 0 -> a
+    | _ ->
+        let combined = seq {
+            yield next
+            yield! a
+        }
+        calc (iterations-1) combined
 
-printfn "%i" (calc 2020 |> List.last)
+printfn "%i" (calc (2020-initialLength) input |> Seq.head)
+// printfn "%i" (calc (30000000-initialLength) input |> Seq.head)
