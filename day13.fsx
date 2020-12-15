@@ -13,15 +13,14 @@ let bus = waitTimes |> Seq.findIndex ((=) shortestWait) |> fun x -> buses.[x] |>
 
 printfn "%i" (bus * (abs shortestWait))
 
-let firstBusId = buses |> Array.head |> snd
-let busTotal = buses.Length - 1
+let busCount = buses.Length - 1
 let lcm a = a |> Seq.fold (*) 1L // only works for prime numbers
 
-let rec findTime busCount inc t =
-    let result = buses.[..busCount] |> Seq.forall (fun (i, bus) -> (t+i) % bus = 0L)
-    match result, busCount = busTotal with
-    | false, _ -> findTime busCount inc (t+inc)
-    | true, false -> findTime (busCount+1) ((buses.[..busCount] |> Seq.map snd |> lcm)) t
+let rec findTime busIndex increment t =
+    let result = buses.[..busIndex] |> Seq.forall (fun (i, bus) -> (t+i) % bus = 0L)
+    match result, busIndex = busCount with
+    | false, _ -> findTime busIndex increment (t+increment)
+    | true, false -> findTime (busIndex+1) ((buses.[..busIndex] |> Seq.map snd |> lcm)) t
     | true, true -> t
 
-printfn "%i" (findTime 0 firstBusId 0L)
+printfn "%i" (findTime 0 1L 0L)
