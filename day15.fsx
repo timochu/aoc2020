@@ -1,23 +1,19 @@
 #time
-let input = System.IO.File.ReadAllText("inputs/day15.txt").Split ',' |> Seq.map int |> Seq.rev
-let initialLength = input |> Seq.length
+let input = System.IO.File.ReadAllText("inputs/day15.txt").Split ',' |> Array.map int
+let initialLength = input |> Array.length
+let lookup = input.[0..initialLength-2] |> Array.indexed |> Array.map (fun (x,y) -> (y,x+1)) |> Map.ofArray
+let lastInt = input |> Array.last
 
-let nextValue a =
-    let prevInt = a |> Seq.head
-    match a |> Seq.skip 1 |> Seq.exists ((=) prevInt) with
+let nextValue i lookup prevInt =
+    match lookup |> Map.containsKey prevInt with
     | false -> 0
-    | true -> a |> Seq.skip 1 |> Seq.findIndex ((=) prevInt) |> (+) 1
+    | true -> i - lookup.[prevInt]
 
-let rec calc iterations a =
-    let next = nextValue a
-    match iterations with
-    | 0 -> a
-    | _ ->
-        let combined = seq {
-            yield next
-            yield! a
-        }
-        calc (iterations-1) combined
+let rec calc i iterations lookup prevInt =
+    let next = nextValue i lookup prevInt
+    match i = iterations with
+    | true -> prevInt
+    | false -> calc (i+1) iterations (lookup.Add(prevInt, i)) next
 
-printfn "%i" (calc (2020-initialLength) input |> Seq.head)
-// printfn "%i" (calc (30000000-initialLength) input |> Seq.head)
+printfn "%i" (calc initialLength 2020 lookup lastInt)
+printfn "%i" (calc initialLength 30000000 lookup lastInt)
