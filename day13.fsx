@@ -2,15 +2,15 @@ let input =  System.IO.File.ReadAllLines("inputs/day13.txt")
 let timestamp = input.[0] |> int64
 let buses = input.[1].Split ',' |> Seq.indexed |> Seq.where (fun (_, x) -> x <> "x") |> Seq.map (fun (i,x) -> (int64 i, int64 x)) |> Seq.toArray
 
-let rec addWhileUnder x aggregate =
-    if (aggregate+x) < timestamp then addWhileUnder x (aggregate+x)
+let rec addWhileUnder aggregate x =
+    if (aggregate+x) < timestamp then addWhileUnder (aggregate+x) x
     else (aggregate+x)
 
-let waitTimes = buses |> Seq.map (fun (_, x) -> addWhileUnder x 0L |> (-) timestamp)
+let waitTimes = buses |> Seq.map (snd >> addWhileUnder 0L >> (-) timestamp)
 let shortestWait = waitTimes |> Seq.max
-let bus = waitTimes |> Seq.findIndex ((=) shortestWait) |> fun x -> buses.[x] |> snd
+let nextBus = waitTimes |> Seq.findIndex ((=) shortestWait) |> fun x -> buses.[x] |> snd
 
-printfn "%i" (bus * (abs shortestWait))
+printfn "%i" (nextBus * (abs shortestWait))
 
 let busCount = buses.Length - 1
 let lcm a = a |> Seq.fold (*) 1L // only works for prime numbers
