@@ -13,7 +13,7 @@ let nextBus = waitTimes |> Seq.findIndex ((=) shortestWait) |> fun x -> buses.[x
 printfn "%i" (nextBus * (abs shortestWait))
 
 let busCount = buses.Length - 1
-let lcm a = a |> Seq.fold (*) 1L // only works for prime numbers
+let lcm a = a |> Seq.reduce (*) // only works for prime numbers
 
 let rec findTime busIndex increment t =
     let result = buses.[..busIndex] |> Seq.forall (fun (i, bus) -> (t+i) % bus = 0L)
