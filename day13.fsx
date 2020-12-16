@@ -1,6 +1,7 @@
 let input =  System.IO.File.ReadAllLines("inputs/day13.txt")
 let timestamp = input.[0] |> int64
-let buses = input.[1].Split ',' |> Seq.indexed |> Seq.where (fun (_, x) -> x <> "x") |> Seq.map (fun (i,x) -> (int64 i, int64 x)) |> Seq.toArray
+let buses = 
+    input.[1].Split ',' |> Array.indexed |> Array.where (snd >> (<>) "x") |> Array.map (fun (i,x) -> (int64 i, int64 x))
 
 let rec waitTime aggregate x =
     let result = aggregate + x
