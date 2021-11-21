@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/2
+
 type Password = 
     { Min: int
       Max: int

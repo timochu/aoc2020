@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/9
+
 let input = System.IO.File.ReadAllLines("inputs/day9.txt") |> Array.map int64
 let preample = 25
 

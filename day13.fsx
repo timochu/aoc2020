@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/13
+
 let input =  System.IO.File.ReadAllLines("inputs/day13.txt")
 let timestamp = input.[0] |> int64
 let buses = 

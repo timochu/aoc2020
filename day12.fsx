@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/12
+
 let input =  System.IO.File.ReadAllLines("inputs/day12.txt")
 
 let manhattanDistance (x,y,_) = (abs x) + (abs y)

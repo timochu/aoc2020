@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/5
+
 let search (sequence : string) loChar upChar = 
     let upperLimit = (pown 2 sequence.Length) - 1
     let folder (lo, hi) c = 

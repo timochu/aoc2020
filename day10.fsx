@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/10
+
 let input = 
     System.IO.File.ReadAllLines("inputs/day10.txt")
     |> Array.toList 

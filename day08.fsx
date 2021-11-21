@@ -1,3 +1,5 @@
+// puzzle: https://adventofcode.com/2020/day/8
+
 let input = System.IO.File.ReadAllLines("inputs/day8.txt")
 
 type Instruction = | Acc of int | Jmp of int | Nop of int
