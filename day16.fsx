@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/16
+#time
 
 open System
 open type System.Environment

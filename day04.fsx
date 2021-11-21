@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/4
+#time
 
 open System
 

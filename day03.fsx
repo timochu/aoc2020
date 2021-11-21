@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/3
+#time
 
 let input = System.IO.File.ReadAllLines "inputs/day3.txt" |> Seq.map (String.replicate 100) |> String.concat ""
 let width = System.IO.File.ReadLines "inputs/day3.txt" |> Seq.head |> String.length |> (*) 100

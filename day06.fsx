@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/6
+#time
 
 open System
 let groups = IO.File.ReadAllText("inputs/day6.txt").Split(Environment.NewLine + Environment.NewLine)

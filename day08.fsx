@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/8
+#time
 
 let input = System.IO.File.ReadAllLines("inputs/day8.txt")
 

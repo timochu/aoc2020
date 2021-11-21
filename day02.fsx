@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/2
+#time
 
 type Password = 
     { Min: int

@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/15
+#time
 
 let input = System.IO.File.ReadAllText("inputs/day15.txt").Split ',' |> Array.map int
 let initialLength = input |> Array.length

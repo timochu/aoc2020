@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/11
+#time
 
 let input =  System.IO.File.ReadAllLines("inputs/day11.txt") |> array2D
 let l1 = Array2D.length1 input - 1

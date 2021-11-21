@@ -1,4 +1,5 @@
 // puzzle: https://adventofcode.com/2020/day/1
+#time
 
 let input = System.IO.File.ReadAllLines "inputs/day1.txt" |> Seq.map int
 
